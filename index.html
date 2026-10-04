@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BillSplit — Precision Expense Sharing in ₹ (INR)</title>
+    <meta name="description" content="Split dinner bills and group expenses in Indian Rupees (₹) with mathematical precision, exact fractional balancing, and instant local persistence." />
+    <meta property="og:title" content="BillSplit — Precision Expense Sharing" />
+    <meta property="og:description" content="Split dinner bills and group expenses in Indian Rupees (₹) with mathematical precision, exact fractional balancing, and instant local persistence." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <!-- 4-Second Smooth Intro / Splash Screen -->
+    <aside id="splashScreen" class="splash-screen" aria-label="Intro Screen">
+      <div class="splash-backdrop" aria-hidden="true"></div>
+      <div class="splash-card">
+        <div class="splash-badge-label">COMPETITION SHOWCASE</div>
+        <div class="splash-logo" aria-hidden="true">
+          <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+            <line x1="12" y1="10" x2="12" y2="20"></line>
+            <circle cx="7.5" cy="7" r="1.2" fill="currentColor"></circle>
+            <circle cx="16.5" cy="7" r="1.2" fill="currentColor"></circle>
+          </svg>
+        </div>
+        <h1 class="splash-title">BillSplit</h1>
+        <p class="splash-tagline">Split the bill. Settle up. Move on.</p>
+
+        <!-- Mandatory Attribution Badge -->
+        <div class="splash-attribution-box">
+          <div class="splash-author-text">created by siddhesh H. Kewate</div>
+          <div class="splash-id-text">compitition id - ZC-1522AFD0C589</div>
+        </div>
+
+        <!-- 4-Second Animated Progress Track -->
+        <div class="splash-progress-track" aria-hidden="true">
+          <div id="splashProgressBar" class="splash-progress-bar"></div>
+        </div>
+
+        <div class="splash-actions-row">
+          <span class="splash-status-note">Initializing precision partition engine...</span>
+          <button id="skipSplashBtn" type="button" class="splash-skip-link">Skip Intro &rarr;</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Top Navigation Header -->
+    <header class="app-header">
+      <div class="header-container">
+        <div class="brand">
+          <div class="brand-logo" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+              <line x1="12" y1="10" x2="12" y2="20"></line>
+              <circle cx="7.5" cy="7" r="1" fill="currentColor"></circle>
+              <circle cx="16.5" cy="7" r="1" fill="currentColor"></circle>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <h1 class="brand-title">BillSplit</h1>
+            <p class="brand-tagline">Split the bill. Settle up. Move on.</p>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <!-- Fixed INR Currency Indicator -->
+          <div class="currency-badge-static" title="All calculations optimized exclusively for Indian Rupees (₹)">
+            <span class="currency-symbol">₹</span>
+            <span class="currency-code">INR</span>
+          </div>
+          <button id="resetAppBtn" type="button" class="btn-ghost" title="Clear all and reset form">
+            <svg class="btn-icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+              <path d="M3 3v5h5"></path>
+            </svg>
+            <span>Reset</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Layout -->
+    <main class="main-content">
+      <div class="layout-grid">
+        <!-- Input Section Card -->
+        <section class="card input-card" aria-labelledby="form-heading">
+          <div class="card-header">
+            <div class="card-header-badge">Group Expense</div>
+            <h2 id="form-heading" class="card-title">Bill Parameters</h2>
+            <p class="card-subtitle">Enter total bill and headcount to calculate individual shares</p>
+          </div>
+
+          <form id="billForm" novalidate>
+            <!-- Occasion Input -->
+            <div class="form-group" id="groupOccasion">
+              <label for="occasionInput" class="form-label">
+                Occasion Name
+                <span class="required" aria-hidden="true">*</span>
+              </label>
+              <div class="input-wrapper">
+                <span class="input-prefix-icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                    <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                  </svg>
+                </span>
+                <input
+                  type="text"
+                  id="occasionInput"
+                  name="occasion"
+                  class="form-control"
+                  placeholder="e.g. Dinner with Friends, Goa Trip"
+                  autocomplete="off"
+                  maxlength="80"
+                  aria-required="true"
+                  aria-describedby="occasionError"
+                />
+              </div>
+              <div id="occasionError" class="error-message" role="alert" aria-live="polite"></div>
+            </div>
+
+            <!-- Bill Amount Input (Rupees only) -->
+            <div class="form-group" id="groupAmount">
+              <label for="amountInput" class="form-label">
+                Total Bill Amount
+                <span class="required" aria-hidden="true">*</span>
+                <span class="label-hint">(in ₹)</span>
+              </label>
+              <div class="input-wrapper">
+                <span id="amountCurrencySymbol" class="input-prefix" aria-hidden="true">₹</span>
+                <input
+                  type="text"
+                  id="amountInput"
+                  name="amount"
+                  class="form-control with-prefix"
+                  placeholder="0.00"
+                  inputmode="decimal"
+                  autocomplete="off"
+                  aria-required="true"
+                  aria-describedby="amountError"
+                />
+              </div>
+              <div id="amountError" class="error-message" role="alert" aria-live="polite"></div>
+            </div>
+
+            <!-- Unique Feature: Optional Tip & GST Add-on -->
+            <div class="addons-accordion">
+              <button type="button" id="toggleAddonsBtn" class="addons-toggle" aria-expanded="false" aria-controls="addonsPanel">
+                <span class="addons-toggle-icon" aria-hidden="true">+</span>
+                <span>Add Tip or GST / Service Charge (Optional)</span>
+              </button>
+              <div id="addonsPanel" class="addons-panel hidden">
+                <div class="addon-row">
+                  <div class="addon-col">
+                    <span class="addon-sub-label">Tip:</span>
+                    <div class="addon-pills">
+                      <button type="button" class="addon-pill active" data-tip="0">0%</button>
+                      <button type="button" class="addon-pill" data-tip="5">5%</button>
+                      <button type="button" class="addon-pill" data-tip="10">10%</button>
+                    </div>
+                  </div>
+                  <div class="addon-col">
+                    <span class="addon-sub-label">GST / Tax:</span>
+                    <div class="addon-pills">
+                      <button type="button" class="addon-pill active" data-gst="0">0%</button>
+                      <button type="button" class="addon-pill" data-gst="5">5%</button>
+                      <button type="button" class="addon-pill" data-gst="18">18%</button>
+                    </div>
+                  </div>
+                </div>
+                <div id="addonSummary" class="addon-summary-text hidden"></div>
+              </div>
+            </div>
+
+            <!-- Number of People Input (Minimum 2) -->
+            <div class="form-group" id="groupPeople">
+              <label for="peopleInput" class="form-label">
+                Number of People
+                <span class="required" aria-hidden="true">*</span>
+                <span class="label-hint">(Minimum 2 participants)</span>
+              </label>
+              <div class="input-wrapper">
+                <span class="input-prefix-icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                  </svg>
+                </span>
+                <input
+                  type="text"
+                  id="peopleInput"
+                  name="people"
+                  class="form-control"
+                  placeholder="e.g. 3"
+                  inputmode="numeric"
+                  autocomplete="off"
+                  aria-required="true"
+                  aria-describedby="peopleError"
+                />
+              </div>
+
+              <!-- Quick Selector Pills (2 and above) -->
+              <div class="quick-people" aria-label="Quick people presets">
+                <span class="quick-label">Presets:</span>
+                <button type="button" class="preset-btn" data-people="2">2</button>
+                <button type="button" class="preset-btn" data-people="3">3</button>
+                <button type="button" class="preset-btn" data-people="4">4</button>
+                <button type="button" class="preset-btn" data-people="5">5</button>
+                <button type="button" class="preset-btn" data-people="8">8</button>
+                <button type="button" class="preset-btn" data-people="10">10</button>
+                <button type="button" class="preset-btn" data-people="1000">1K</button>
+              </div>
+              <div id="peopleError" class="error-message" role="alert" aria-live="polite"></div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="form-actions">
+              <button type="submit" id="splitBtn" class="btn btn-primary">
+                <span class="btn-text">Split Bill</span>
+                <svg class="btn-arrow-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </button>
+            </div>
+          </form>
+
+          <!-- Automatic Save Status Notice -->
+          <div id="saveStatus" class="save-status hidden" aria-live="polite">
+            <svg class="save-icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span id="saveStatusText">Saved automatically to browser storage</span>
+          </div>
+        </section>
+
+        <!-- Result Section Container -->
+        <section class="card result-card" id="resultContainer" aria-labelledby="results-heading">
+          <!-- Empty State (Shown before calculation) -->
+          <div id="emptyState" class="empty-state">
+            <div class="empty-graphic" aria-hidden="true">
+              <svg width="68" height="68" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="empty-svg-icon">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="8" y1="13" x2="16" y2="13"></line>
+                <line x1="8" y1="17" x2="12" y2="17"></line>
+              </svg>
+            </div>
+            <h2 id="results-heading" class="empty-title">Awaiting Bill Parameters</h2>
+            <p class="empty-description">
+              Provide the occasion, bill total in ₹, and at least 2 participants on the left to calculate each member's exact contribution.
+            </p>
+            <div class="empty-features">
+              <div class="feature-item">
+                <span class="feature-bullet"></span>
+                <span>Zero-drift exact paisa &amp; micro-share distribution</span>
+              </div>
+              <div class="feature-item">
+                <span class="feature-bullet"></span>
+                <span>Direct WhatsApp settle-up &amp; custom participant renaming</span>
+              </div>
+              <div class="feature-item">
+                <span class="feature-bullet"></span>
+                <span>Instant print &amp; PDF receipt generation</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Active Results (Hidden until calculated) -->
+          <div id="resultsView" class="results-view hidden" aria-live="polite">
+            <!-- Summary Box -->
+            <div class="summary-box">
+              <div class="summary-top">
+                <div class="summary-occasion-group">
+                  <span class="summary-label">Occasion Breakdown</span>
+                  <h3 id="resOccasion" class="summary-occasion-name">Dinner</h3>
+                </div>
+                <div class="summary-actions">
+                  <!-- Unique Feature: Direct WhatsApp Settle-up Button -->
+                  <button type="button" id="shareWhatsAppBtn" class="btn-subtle btn-whatsapp" title="Share breakdown directly on WhatsApp">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                    </svg>
+                    <span>WhatsApp</span>
+                  </button>
+
+                  <button type="button" id="copySummaryBtn" class="btn-subtle btn-copy" title="Copy breakdown text to clipboard">
+                    <span id="copyBtnIconWrap">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                      </svg>
+                    </span>
+                    <span id="copyBtnText">Copy</span>
+                  </button>
+
+                  <!-- Unique Feature: Print Receipt Button -->
+                  <button type="button" id="printReceiptBtn" class="btn-subtle btn-print" title="Print or save as PDF receipt">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                      <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                      <rect x="6" y="14" width="12" height="8"></rect>
+                    </svg>
+                    <span>Print</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="summary-stats-grid">
+                <div class="stat-cell">
+                  <span class="stat-caption">Total Bill</span>
+                  <span id="resTotalBill" class="stat-value total-value">₹0.00</span>
+                </div>
+                <div class="stat-cell">
+                  <span class="stat-caption">Participants</span>
+                  <span id="resPeopleCount" class="stat-value">0</span>
+                </div>
+                <div class="stat-cell highlight-cell">
+                  <span class="stat-caption">Each Person Pays</span>
+                  <span id="resPerPerson" class="stat-value per-person-value">₹0.00</span>
+                </div>
+              </div>
+
+              <!-- Precision Note if remainder adjusted or micro-share active -->
+              <div id="roundingNotice" class="rounding-notice hidden" role="note"></div>
+            </div>
+
+            <!-- Individual Cards Section -->
+            <div class="persons-section">
+              <div class="persons-header">
+                <div class="persons-title-wrap">
+                  <h4 class="persons-title">Individual Shares</h4>
+                  <span id="personsBadge" class="badge">0 Shares</span>
+                  <span class="persons-hint-text">(Click any name to customize)</span>
+                </div>
+
+                <!-- Windowed pagination controls to avoid browser lag on large groups -->
+                <div id="paginationControls" class="pagination-controls hidden">
+                  <span id="displayCountNotice" class="display-count-notice"></span>
+                  <div class="pagination-buttons">
+                    <button type="button" id="prevPageBtn" class="btn-tiny" disabled title="Previous page">← Prev</button>
+                    <span id="pageIndicator" class="page-indicator">1 / 1</span>
+                    <button type="button" id="nextPageBtn" class="btn-tiny" title="Next page">Next →</button>
+                  </div>
+                </div>
+              </div>
+
+              <div id="personsGrid" class="persons-grid" role="list">
+                <!-- Dynamically rendered person cards -->
+              </div>
+            </div>
+
+            <!-- Verification Footer Card -->
+            <div class="reconciliation-bar">
+              <div class="reconciliation-info">
+                <span class="reconcile-check" aria-hidden="true">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                </span>
+                <span class="reconcile-text">
+                  Sum of individual shares: <strong id="resSumTotal">₹0.00</strong>
+                </span>
+              </div>
+              <span class="reconcile-status">Exact Match</span>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Footer with Competition Attribution -->
+    <footer class="app-footer">
+      <div class="footer-container">
+        <p class="footer-primary-text">BillSplit &bull; Clean, mathematically exact expense partitioning in ₹ (INR).</p>
+        <!-- Mandatory Footer Attribution Line -->
+        <p class="footer-competition-text">
+          created by siddhesh H. Kewate &bull; compitition id - ZC-1522AFD0C589
+        </p>
+      </div>
+    </footer>
+
+    <!-- App JavaScript -->
+    <script src="/script.js"></script>
+  </body>
+</html>
